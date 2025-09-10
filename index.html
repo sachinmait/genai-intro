@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Training: Understanding Generative AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #F393D1;
+            --light-blue: #C0F1FC;
+            --green: #99E081;
+            --yellow: #F7C84E;
+            --beige: #F7DDCB;
+            --black: #000000;
+            --border: 4px solid var(--black);
+            --shadow: 10px 10px 0 var(--black);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--beige);
+            color: var(--black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1100px;
+            height: 700px;
+            background-color: white;
+            border: var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-bottom: 60px; /* Space for navigation */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            height: 100%;
+            align-items: start;
+            text-align: left;
+        }
+        
+        .slide-content.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .slide h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: var(--yellow);
+            padding: 0.5rem 1rem;
+            border: var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .slide h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: var(--border);
+            width: 100%;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .slide ul {
+            list-style-position: inside;
+            padding-left: 1rem;
+        }
+
+        .content-box {
+            background: #fff;
+            border: var(--border);
+            padding: 1.5rem;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .deep-dive {
+            background: var(--light-blue);
+            border: var(--border);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .deep-dive h3 {
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        nav {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-button {
+            background-color: var(--pink);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border: var(--border);
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.1s ease-in-out;
+        }
+
+        .nav-button:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 6px 6px 0 var(--black);
+        }
+
+        .nav-button:active {
+            transform: translate(8px, 8px);
+            box-shadow: 2px 2px 0 var(--black);
+        }
+
+        .nav-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        #slide-counter {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .interactive-zone {
+            width: 100%;
+            margin-top: auto; /* Pushes to the bottom */
+            padding-top: 1.5rem;
+        }
+        
+        .interactive-zone h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mcq-option {
+            display: block;
+            width: 100%;
+            background-color: var(--beige);
+            border: var(--border);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            text-align: left;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .mcq-option:hover {
+            background-color: var(--yellow);
+        }
+        
+        .mcq-option.correct {
+            background-color: var(--green);
+        }
+        
+        .mcq-option.incorrect {
+            background-color: var(--pink);
+        }
+        
+        .mcq-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            border: var(--border);
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: var(--light-blue);
+            font-weight: 900;
+        }
+        
+        @media (max-width: 900px) {
+            .slide-content {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            main {
+                height: auto;
+                min-height: 90vh;
+            }
+            .slide h1 { font-size: 2.5rem; }
+            .slide h2 { font-size: 1.5rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <main>
+        <div class="slide active">
+            <h1>Generative AI</h1>
+            <p style="font-size: 1.5rem; margin-top: 1rem;">A Training Session for Educators</p>
+        </div>
+
+        <div class="slide">
+             <div class="slide-content">
+                <div class="content-box">
+                    <h2>What is Generative AI?</h2>
+                    <p>Generative AI is a field of Artificial Intelligence that focuses on creating <strong>new, original content</strong> rather than just analyzing or classifying existing data. It learns patterns and structures from large datasets and then uses that knowledge to produce novel outputs.</p>
+                    <p>Think of it as a student who has studied a vast library of books and can now write their own original stories, inspired by what they've read but entirely new.</p>
+                     <ul>
+                        <li>Generates images, videos, text, music, and more.</li>
+                        <li>Moves beyond prediction to creation.</li>
+                        <li>Combines technology with human-like imagination.</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: GenAI in Real Life</h3>
+                        <p><strong>Marketing:</strong> Companies use tools like Jasper or Copy.ai to instantly generate ad copy, social media posts, and product descriptions, dramatically speeding up content creation.</p>
+                        <p><strong>Entertainment:</strong> Disney used proprietary Generative AI tools to create age-reversal effects for actors in films like 'The Irishman', generating realistic younger versions of the actors' faces.</p>
+                    </div>
+                    <div class="interactive-zone">
+                         <h4>Interactive Check</h4>
+                         <p>Which of the following best describes Generative AI's primary function?</p>
+                         <button class="mcq-option" data-group="1">Analyzing existing sales data.</button>
+                         <button class="mcq-option" data-correct="true" data-group="1">Creating a new song in the style of a famous artist.</button>
+                         <button class="mcq-option" data-group="1">Filtering spam emails from an inbox.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content full-width">
+                <div class="content-box">
+                    <h2>Traditional AI vs. Generative AI</h2>
+                    <p>While both are subsets of AI, their goals are fundamentally different. Traditional AI is like a skilled chef following a recipe perfectly every time. Generative AI is like an experimental chef inventing entirely new dishes.</p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Traditional AI (Discriminative)</th>
+                                <th>Generative AI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Focus</strong></td>
+                                <td>Defined tasks, problem-solving, classification</td>
+                                <td>Content creation, exploration</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Output</strong></td>
+                                <td>Predictions, decisions (e.g., "Is this a cat?")</td>
+                                <td>New content (e.g., "Generate a picture of a cat.")</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Example</strong></td>
+                                <td>Facial recognition, spam filters</td>
+                                <td>ChatGPT, Midjourney, DALL-E</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="interactive-zone">
+                         <h4>Interactive Check: True or False?</h4>
+                         <p>"A system that predicts stock market trends based on historical data is an example of Generative AI."</p>
+                         <button class="mcq-option" data-group="2">True</button>
+                         <button class="mcq-option" data-correct="true" data-group="2">False</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>Key Drivers of the GenAI Boom</h2>
+                    <p>The recent explosion in Generative AI is not accidental. It's powered by two key technological advancements happening simultaneously.</p>
+                    <h4>1. Massive Data Availability</h4>
+                    <p>GenAI models are "trained" on enormous datasets. The internet has provided a vast library of text, images, and code for these models to learn from, like the Common Crawl dataset which contains petabytes of web data.</p>
+                    <h4>2. Computational Power & Algorithms</h4>
+                    <p>Advanced algorithms like <strong>Deep Learning</strong> and <strong>Transformers</strong> can process this data. This is made possible by powerful hardware, especially Graphics Processing Units (GPUs), which can perform the millions of calculations needed.</p>
+                </div>
+                <div class="content-box">
+                     <div class="deep-dive">
+                        <h3>Deep Dive: GenAI in Real Life</h3>
+                        <p><strong>Hardware Impact:</strong> NVIDIA, a company that originally made GPUs for gaming, is now a dominant force in AI. Their H100 and A100 GPUs are the workhorses in data centers that train large models like ChatGPT. The demand is so high it has created a global supply shortage.</p>
+                        <p><strong>Open Data:</strong> Initiatives like Wikipedia and open-source code on GitHub have provided high-quality, structured data that is crucial for training reliable AI models on a massive scale.</p>
+                    </div>
+                    <div class="interactive-zone">
+                         <h4>Interactive Check</h4>
+                         <p>Which technology is most critical for training large Generative AI models?</p>
+                         <button class="mcq-option" data-group="3">Standard CPUs</button>
+                         <button class="mcq-option" data-correct="true" data-group="3">Powerful GPUs</button>
+                         <button class="mcq-option" data-group="3">Quantum Computers</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>Types of GenAI: GANs</h2>
+                    <h4>Generative Adversarial Networks</h4>
+                    <p>GANs use a clever "cat and mouse" system with two competing neural networks:</p>
+                    <ul>
+                        <li><strong>The Generator:</strong> An "artist" that creates new content (e.g., an image). Its goal is to create content so realistic it fools the Discriminator.</li>
+                        <li><strong>The Discriminator:</strong> An "art critic" that compares the Generator's creation to real examples. Its goal is to correctly identify whether the content is real or fake.</li>
+                    </ul>
+                    <p>They train together, constantly competing. This process forces the Generator to become incredibly skilled at creating lifelike, high-quality outputs.</p>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: GANs in Real Life</h3>
+                        <p><strong>Fashion & E-commerce:</strong> The website "This Person Does Not Exist" uses a GAN (specifically, NVIDIA's StyleGAN) to create an endless stream of realistic human faces. Retailers use this tech to generate synthetic models to display clothing, saving on photoshoot costs.</p>
+                        <p><strong>Video Games:</strong> Game developers use GANs to automatically generate realistic textures for environments, such as stone, wood, or terrain, significantly speeding up the game design process.</p>
+                    </div>
+                    <div class="interactive-zone">
+                        <h4>Interactive Check</h4>
+                        <p>In a GAN, what is the main goal of the 'Generator' network?</p>
+                        <button class="mcq-option" data-group="4">To accurately classify data.</button>
+                        <button class="mcq-option" data-group="4">To identify fake content.</button>
+                        <button class="mcq-option" data-correct="true" data-group="4">To create new content that is indistinguishable from real data.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>Types of GenAI: RNNs</h2>
+                    <h4>Recurrent Neural Networks</h4>
+                    <p>RNNs are designed to work with <strong>sequential data</strong>—data where the order matters, like text, music, or speech. </p>
+                    <p>Their key feature is a form of "memory." As an RNN processes a sequence, it remembers information from previous steps. This context is crucial for predicting what should come next.</p>
+                    <p>Think of it as reading a sentence: to understand the last word, you need to remember the words that came before it. RNNs do the same, making them excellent for tasks like language translation and text generation.</p>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: RNNs in Real Life</h3>
+                        <p><strong>Predictive Text:</strong> The auto-complete feature on your smartphone keyboard or Google Search uses RNN-like models. It analyzes the sequence of letters you've typed to predict the most likely next word.</p>
+                        <p><strong>Coding Assistants:</strong> Tools like <strong>GitHub Copilot</strong> are built on an evolution of RNNs (Transformers). They analyze the sequence of code you've written to suggest entire lines or functions, understanding the context of your program.</p>
+                    </div>
+                     <div class="interactive-zone">
+                        <h4>Interactive Check</h4>
+                        <p>RNNs are particularly well-suited for which type of data?</p>
+                        <button class="mcq-option" data-correct="true" data-group="5">Sequential data (e.g., text, music)</button>
+                        <button class="mcq-option" data-group="5">Static image data</button>
+                        <button class="mcq-option" data-group="5">Tabular spreadsheet data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>Types of GenAI: VAEs</h2>
+                    <h4>Variational Autoencoders</h4>
+                    <p>VAEs are excellent at learning the essential characteristics of data in a compressed, efficient way. They consist of two parts:</p>
+                    <ul>
+                        <li><strong>The Encoder:</strong> This part analyzes input data (like a face) and compresses it into a simplified numerical representation, capturing key features like smile, hair color, etc.</li>
+                        <li><strong>The Decoder:</strong> This part takes the compressed representation and reconstructs the original data.</li>
+                    </ul>
+                    <p>By tweaking the numbers in the compressed form before decoding, VAEs can generate new, similar data. For example, you could increase the "smile" value to generate a happier-looking face.</p>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: VAEs in Real Life</h3>
+                        <p><strong>Drug Discovery:</strong> Scientists use VAEs to generate new molecular structures. An encoder learns the essential properties of known effective drug molecules, and the decoder then generates novel variations that can be tested, potentially leading to new medicines faster.</p>
+                        <p><strong>Creative Tools:</strong> In photo editing software, VAEs power features that allow for smooth transformations, like morphing one face into another or altering facial expressions realistically by manipulating the underlying compressed features.</p>
+                    </div>
+                    <div class="interactive-zone">
+                        <h4>Interactive Check: True or False?</h4>
+                        <p>"The 'Encoder' part of a VAE is responsible for generating the final, new image."</p>
+                        <button class="mcq-option" data-group="6">True</button>
+                        <button class="mcq-option" data-correct="true" data-group="6">False</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>The Tech Behind Text-to-Image</h2>
+                    <p>How does a tool like Midjourney or DALL-E turn a sentence into a picture? It's a combination of different AI technologies working together.</p>
+                    <h4>1. Natural Language Processing (NLP)</h4>
+                    <p>This is the "translator." It takes your text prompt (e.g., "A cat wearing a hat") and breaks it down, understanding the objects ("cat," "hat") and their relationship ("wearing").</p>
+                    <h4>2. Machine Learning (ML) & Computer Vision (CV)</h4>
+                    <p>The model is trained on billions of image-caption pairs. Through this training, it learns the connection between words and visuals. CV helps it understand visual details—the shape of a cat, the texture of a hat.</p>
+                    <h4>3. The Generative Model</h4>
+                    <p>Finally, a generative model (often a "diffusion model") uses the understanding from NLP and ML to create a brand-new image pixel by pixel that matches your prompt.</p>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: Real-Life Synergy</h3>
+                        <p><strong>Integrated Creative Suites:</strong> Adobe Firefly is now embedded in Photoshop. A user can select an area of an image and type a prompt like "add a flock of birds," and the AI generates them directly into the existing picture, seamlessly blending them.</p>
+                        <p><strong>Accessible Design:</strong> Microsoft Designer (formerly Bing Image Creator) integrates DALL-E 3 directly into its design platform. This allows users without artistic skill to generate high-quality custom graphics for presentations, posters, or social media just by describing them.</p>
+                    </div>
+                    <div class="interactive-zone">
+                        <h4>Interactive Check</h4>
+                        <p>In a text-to-image generator, which component is responsible for understanding the user's written prompt?</p>
+                        <button class="mcq-option" data-correct="true" data-group="7">Natural Language Processing (NLP)</button>
+                        <button class="mcq-option" data-group="7">Computer Vision (CV)</button>
+                        <button class="mcq-option" data-group="7">The final image encoder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>GenAI in the Classroom</h2>
+                    <p>Generative AI offers powerful tools for both teachers and students, transforming how we approach lesson planning, content creation, and personalized learning.</p>
+                    <h4>For Teachers:</h4>
+                    <ul>
+                        <li><strong>Lesson Planning:</strong> Generate lesson plans, activity ideas, and quiz questions tailored to a specific topic and grade level.</li>
+                        <li><strong>Differentiated Instruction:</strong> Create multiple versions of a text at different reading levels with a single click.</li>
+                        <li><strong>Material Creation:</strong> Instantly generate example problems, stories, or images to illustrate a concept.</li>
+                    </ul>
+                    <h4>For Students:</h4>
+                     <ul>
+                        <li><strong>Personalized Tutors:</strong> AI can act as a practice partner, explaining concepts in different ways and providing instant feedback on problems.</li>
+                        <li><strong>Creative Spark:</strong> Overcome writer's block by generating story ideas or visualize a concept by creating an image from a description.</li>
+                        <li><strong>Research Assistant:</strong> Summarize long articles or explain complex topics in simpler terms.</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: Real-Life EdTech Tools</h3>
+                        <p><strong>MagicSchool.ai:</strong> A platform specifically for educators that offers dozens of tools, including a rubric generator, a lesson plan creator, and a tool to generate Individualized Education Program (IEP) goals, saving teachers hours of administrative work.</p>
+                        <p><strong>Khanmigo:</strong> Khan Academy's AI-powered guide acts as both a student tutor and a teacher assistant. It can guide a student through a math problem without giving the answer, and it can help teachers write class outlines.</p>
+                         <p><strong>Curipod:</strong> This tool allows teachers to build interactive presentations with AI-generated polls, word clouds, and drawing activities based on a simple lesson topic prompt.</p>
+                    </div>
+                    <div class="interactive-zone">
+                        <h4>Interactive Check</h4>
+                        <p>A teacher wants to create three versions of a history text for students at different reading levels. This is an example of using GenAI for:</p>
+                        <button class="mcq-option" data-group="8">Grading essays.</button>
+                        <button class="mcq-option" data-correct="true" data-group="8">Differentiated instruction.</button>
+                        <button class="mcq-option" data-group="8">Classroom management.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-content">
+                <div class="content-box">
+                    <h2>Ethical Considerations</h2>
+                    <p>With great power comes great responsibility. The rise of Generative AI introduces significant ethical challenges that we must navigate carefully.</p>
+                    <h4>Bias and Discrimination</h4>
+                    <p>Models are trained on real-world data, which contains human biases. If training data underrepresents certain groups, the AI can reproduce or amplify stereotypes.</p>
+                    <h4>Misinformation & Deepfakes</h4>
+                    <p>GenAI can create highly realistic but entirely fake images, articles, and videos ("deepfakes"). This can be used to spread false information, manipulate public opinion, or create malicious content.</p>
+                    <h4>Intellectual Property & Plagiarism</h4>
+                    <p>Who owns AI-generated content? The user who wrote the prompt, the company that built the AI, or the creators of the original data it was trained on? This is a major legal gray area.</p>
+                </div>
+                <div class="content-box">
+                    <div class="deep-dive">
+                        <h3>Deep Dive: Real-Life Ethical Dilemmas</h3>
+                        <p><strong>Copyright Lawsuits:</strong> The New York Times is suing OpenAI and Microsoft, alleging that ChatGPT was trained on millions of their copyrighted articles without permission, and that it can now generate text that directly competes with their journalism.</p>
+                        <p><strong>Political Deepfakes:</strong> During election cycles, AI-generated audio and video clips have emerged that falsely depict candidates saying things they never said, creating confusion and aiming to mislead voters.</p>
+                        <p><strong>Bias in Image Models:</strong> Early image generators, when prompted with "CEO" or "doctor," predominantly created images of white men, reflecting and reinforcing societal biases present in their training data. Companies are now actively working to mitigate this.</p>
+                    </div>
+                     <div class="interactive-zone">
+                        <h4>Interactive Check</h4>
+                        <p>The term for a hyper-realistic, AI-generated video that falsely depicts a person is:</p>
+                        <button class="mcq-option" data-group="9">A meme.</button>
+                        <button class="mcq-option" data-correct="true" data-group="9">A deepfake.</button>
+                        <button class="mcq-option" data-group="9">A hologram.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-content full-width">
+                <div class="content-box">
+                    <h2>Guidelines for Responsible Student Use</h2>
+                    <p>It's crucial to teach students to use Generative AI as a powerful tool, not a crutch. The goal is to enhance learning, not replace it.</p>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th style="background-color: var(--green);">Responsible Use (Supplement)</th>
+                                <th style="background-color: var(--pink);">Irresponsible Use (Substitute)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Using AI to brainstorm ideas for an essay.</td>
+                                <td>Asking AI to write the entire essay.</td>
+                            </tr>
+                             <tr>
+                                <td>Asking AI to summarize a complex scientific paper.</td>
+                                <td>Copying the summary without reading the original paper.</td>
+                            </tr>
+                            <tr>
+                                <td>Using AI to generate practice questions to test your knowledge.</td>
+                                <td>Using AI to find the answers to homework questions.</td>
+                            </tr>
+                             <tr>
+                                <td>Using AI to create an illustration for a story you wrote.</td>
+                                <td>Claiming the AI's illustration as your own original artwork.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1rem;"><strong>The Core Principle:</strong> Use AI to support the processes of critical thinking, research, and creativity, but never to bypass them. The student must remain the author and thinker.</p>
+                     <div class="interactive-zone">
+                        <h4>Interactive Check</h4>
+                        <p>A student uses ChatGPT to create an outline for their history presentation. Is this a responsible use of the tool?</p>
+                        <button class="mcq-option" data-correct="true" data-group="10">Yes, it's a good way to organize their thoughts.</button>
+                        <button class="mcq-option" data-group="10">No, they should not use AI for any schoolwork.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h1>Key Takeaways</h1>
+            <div class="slide-content">
+                <div class="content-box" style="background-color: var(--light-blue);">
+                    <p><strong>GenAI Creates:</strong> Its primary function is to generate new, original content.</p>
+                    <p><strong>It's a Tool, Not Magic:</strong> It's powered by massive data, powerful hardware, and complex algorithms.</p>
+                </div>
+                <div class="content-box" style="background-color: var(--yellow);">
+                    <p><strong>Huge Potential in Education:</strong> It can revolutionize lesson planning and personalized learning.</p>
+                    <p><strong>Ethics are Paramount:</strong> We must teach and practice responsible use, being mindful of bias, misinformation, and academic integrity.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+             <h1 style="background-color: var(--pink);">Questions & Discussion</h1>
+             <p style="font-size: 1.5rem; margin-top: 1rem;">Let's talk about how we can apply this in our school.</p>
+        </div>
+
+
+        <nav>
+            <button class="nav-button" id="prev-btn" disabled>Previous</button>
+            <span id="slide-counter"></span>
+            <button class="nav-button" id="next-btn">Next</button>
+        </nav>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            const updateSlide = () => {
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentSlide);
+                });
+
+                slideCounter.textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+            };
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlide();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlide();
+                }
+            });
+
+            // Interactivity
+            const mcqOptions = document.querySelectorAll('.mcq-option');
+            mcqOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const isCorrect = option.getAttribute('data-correct') === 'true';
+                    const group = option.getAttribute('data-group');
+
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('incorrect');
+                    }
+                    
+                    // Disable all buttons in the same group after an answer
+                    const groupOptions = document.querySelectorAll(`.mcq-option[data-group="${group}"]`);
+                    groupOptions.forEach(opt => {
+                        opt.disabled = true;
+                    });
+                });
+            });
+
+
+            // Initial load
+            updateSlide();
+        });
+    </script>
+</body>
+</html>
